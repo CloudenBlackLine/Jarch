@@ -1262,7 +1262,7 @@ section_text(s8* p)
 							break;
 						}
 					}
-					if(*p == ':') p++;
+					if(*p == ':' || *p == ';') p++;
 					break;
 				}
 				case '$':
