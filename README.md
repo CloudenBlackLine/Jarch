@@ -13,7 +13,7 @@ This is my first GitHub repository, and I would greatly appreciate any feedback 
 - **Tools/src/** – Development tools for the Jarch architecture:
   - **Assembler** – Transpiles Jcode into executable instructions.  
   - **Emulator** – Runs compiled Jcode programs and provides debugging utilities.  
-  - **MemDumpNZ** – Displays only memory addresses in the final binary that contain non-zero values.  
+  - **BinViewer** – Displays only memory addresses in the final binary that contain non-zero values.  
 
 - **Projects/** – Contains code for specific projects built on Jarch, such as:
   - **Kernel1** – Experimental OS kernel  
