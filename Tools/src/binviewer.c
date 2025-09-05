@@ -72,8 +72,8 @@ filewrite()
 	buffer[i++] = '.';
 	buffer[i++] = 'j';
 	buffer[i++] = 'b';
-	buffer[i++] = 'u';
-	buffer[i++] = 'g';
+	buffer[i++] = 'v';
+	buffer[i++] = 'r';
 	buffer[i] = '\0';
 	FILE* f = fopen(buffer, "w");
 	if(!f) return;
