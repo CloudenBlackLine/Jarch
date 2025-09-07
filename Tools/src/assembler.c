@@ -6,22 +6,22 @@ void		readfile(s8* filename);
 void		writefile(s8* filename);
 
 void		assembler();
-s8*		section_init(s8* code);
-s8*		section_data(s8* code);
-s8*		section_text(s8* code);
-s8*		section_unit(s8* code);
+s8*			section_init(s8* code);
+s8*			section_data(s8* code);
+s8*			section_text(s8* code);
+s8*			section_unit(s8* code);
 
 void		skip_ws(s8* p);
-u64		get_hex(s8** p);
-u8		get_reg(s8** p);
-s8*		get_name(s8* dest, s8* src);
-u32		get_addr(s8* name);
+u64			et_hex(s8** p);
+u8			get_reg(s8** p);
+s8*			get_name(s8* dest, s8* src);
+u32			get_addr(s8* name);
 Flag		get_flag(s8* name);
-s32		get_index(s8* name);
+s32			get_index(s8* name);
 
-s32		get_unit_index(s8* name);
+s32			get_unit_index(s8* name);
 
-u64		packed(u8 r1, u8 r2, u8 r3, u8 r4, u32 imm);
+u64			packed(u8 r1, u8 r2, u8 r3, u8 r4, u32 imm);
 Instruction	unpack(u64 value);
 
 
