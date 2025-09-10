@@ -11,12 +11,12 @@ This is my first GitHub repository, and I would greatly appreciate any feedback 
 ## Repository Structure
 
 - **Tools/src/** – Development tools for the Jarch architecture:
-  - **Assembler** – Transpiles Jcode into executable instructions.  
-  - **Emulator** – Runs compiled Jcode programs and provides debugging utilities.  
-  - **BinViewer** – Displays only memory addresses in the final binary that contain non-zero values.  
+  - **Assembler** – Transpiles Jcode into executable instructions.
+  - **Emulator** – Runs compiled Jcode programs and provides debugging utilities.
+  - **BinViewer** – Displays only memory addresses in the final binary that contain non-zero values.
 
 - **Projects/** – Contains code for specific projects built on Jarch, such as:
-  - **Kernel1** – Experimental OS kernel  
+  - **Kernel1** – Experimental OS kernel
   - **MissileSystem** – Simulated missile control system
 
 ## Getting Started
