@@ -1464,15 +1464,21 @@ section_text(s8* p)
 
 
 
+		case '&':
+		{
+			p++;
+			break;
+		}
 
 
 
 
 
-
-
-
-
+		case '^':
+		{
+			p++;
+			break;
+		}
 
 
 
