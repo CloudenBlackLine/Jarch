@@ -167,9 +167,9 @@ emulator()
 			case OPCODE_CMP_GT_ADDR:	if(reg[in.r1] < reg[in.r2]) { reg[LR] = reg[PC]; reg[PC] = in.imm / 8; } break;
 			case OPCODE_CMP_LT_ADDR:	if(reg[in.r1] > reg[in.r2]) { reg[LR] = reg[PC]; reg[PC] = in.imm / 8; } break;
 
-			case OPCODE_JMP_ADDR:		reg[LR] = reg[PC]; reg[PC] = in.imm/8; break;
-			case OPCODE_JMP_REG:		reg[LR] = reg[PC]; reg[PC] = reg[in.r1]; break;
-			case OPCODE_RET:		reg[PC] = reg[LR]; break;
+			case OPCODE_JMP_ADDR:		reg[LR] = reg[PC]*0x8; reg[PC] = in.imm/8; break;
+			case OPCODE_JMP_REG:		reg[LR] = reg[PC]*0x8; reg[PC] = reg[in.r1]/8; break;
+			case OPCODE_RET:		reg[PC] = reg[LR]/0x8; break;
 			case OPCODE_HALT: running = 0; break;
 		}
 		mem[SYS_TIMER_BASE_ADDR / 8] = ++system_timer;
