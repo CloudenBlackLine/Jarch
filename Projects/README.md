@@ -6,7 +6,7 @@ This folder contains projects developed on the Jarch CPU architecture.
 
 ## Current Projects
 
-- **Kernel1** – Experimental OS kernel running on Jarch.  
+- **Kernel1** – Experimental OS kernel running on Jarch. First edition.
 - **MissileSystem** – Simulated missile control system using Jarch instructions.
 
 ## Structure
