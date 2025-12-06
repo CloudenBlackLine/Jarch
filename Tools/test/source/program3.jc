@@ -1,0 +1,200 @@
+# to include, these are your options /
+
+include: filename1.jc;
+include: filename2.jc;
+
+# or /
+
+include
+{
+    filename1.jc;
+    filename2.jc;
+}
+
+# this will be useable latter
+
+'include
+
+filename1.jc;
+filename2.jc;
+
+# for main, this is the defualt version /
+
+main
+{
+    
+}
+
+# for defining a variable /
+
+var: s32 a = 11;
+var: s32 b = 5;
+var: s32 c;
+
+# or /
+
+var
+{
+    s32 a = 11;
+    s32 b = 5;
+    s32 c;
+}
+
+# later /
+
+'var
+
+s32 a = 11;
+s32 b = 5;
+s32 c;
+
+# for doing operations, if during a var creation, its var: orther wise. For action calls (function calls) its also op: /
+
+op: c = a + b;
+
+# so for a var
+
+var: s32 index = (a + b) - c;
+
+# for creating a action (functions) /
+
+act: s32 foo(s32 a, s32 b) 
+{
+    ret: a + b;
+}
+
+# for a return type of nothing (void) /
+
+act: none foo()
+{
+    ret;
+}
+
+# for more then one return type /
+
+act: <s32,s8> foofoo()
+{
+    ret: 61, 'a';
+}
+
+
+# for creating a object, you have either a enum or unit.
+# a unit is a structure, that contains var, but will soon be able to hold actions, and blocks (will be defined soon).
+# here is a enum example /
+
+obj: enum
+{   
+    BLUE,
+    RED,
+    GREEN
+} Color;
+
+# a var only unit
+
+obj: unit var
+{
+    u64 start;
+    u64 end;
+    arr: u64 mem[32];
+} Stack;
+
+# later
+
+obj: unit 
+{
+    private
+    {
+        var: u64 start;
+        var: u64 end;
+
+        var: u64 count;
+        arr: u64 index[];
+        arr: u64 mem[];
+    }
+    public
+    {
+        act: none init(u64 s, u64 e) op
+        {
+            start = s;
+            end = e;
+            count = 0;
+            index[end-start];
+            mem[end-start];
+            ret;
+        }
+
+        act: s32 add(u64 value) op
+        {
+            mem[count] = value;
+            index[count] = count;
+            ret: count++;
+        }
+
+        act: none remove(u64 i) op
+        {
+            mem[i] = mem[count];
+            index[i] = index[count];
+            mem[count] = 0;
+            index[count--] = 0;
+        }
+    }
+} Stack;
+
+var: Stack vm1;
+op: vm1.init(0x0, 0x1000);
+
+
+
+# a block is a macro that is ran before the complier, and it can contain anything.
+# For example /
+
+block: init_program
+{
+    ekafhjskjnfja
+    fakvgnjb
+
+    vkanfdvnldf
+}
+
+
+# if that block is never called, then all of that jiberash, is not a error.
+# this is how you would call, and where ever you call it is placed there.
+
+op: init_program;
+
+# a block can contain anything, from a var to op, to acts, to obj defined and used.
+# Blocks can be called anywhere, but can only be defined in the global position.
+
+
+# loops, are made like this /
+
+var u64 i = 0;
+loop(i < 10) op
+{
+    i++;
+    do this
+}
+
+
+# also can be made with a label like /
+
+var: u64 i = 0;
+loop: loopname(i < 10) op
+{
+    i++;
+}
+
+
+# also for a never ending loop /
+
+loop
+{
+
+}
+
+# also /
+
+loop: name
+{
+
+}

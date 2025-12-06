@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "assembler.h": "c",
+        "header.h": "c",
+        "util.h": "c",
+        "types.h": "c",
+        "jarch.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
+}

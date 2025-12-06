@@ -1,6 +1,6 @@
 #include "./header.h"
 
-#define		MAX_MEMORY	0x00007d00
+#define		MAX_MEMORY	0x00007ff8
 #define		MAX_REGISTER	13
 
 void		readfile(s8* filename);
@@ -9,10 +9,11 @@ void		writefile(s8* filename);
 void		set_key(struct termios* original_termios);
 void		reset_key(struct termios* old_termios);
 
+
+void		init_mem();
 void		emulator();
 
 Instruction	unpack(u64 val);
-
 
 
 u64		mem[MAX_MEMORY/8];
@@ -29,11 +30,19 @@ main(s32 argc, s8* argv[])
 	struct termios old_termios;
 	set_key(&old_termios);
 	reg[SP] = 0, reg[PC] = 0, reg[LR] = 0;
+	init_mem();
 	readfile(argv[1]);
 	emulator();
-	writefile(argv[1]);
+	writefile(argv[2]);
 	reset_key(&old_termios);
 	return 0;
+}
+
+void
+init_mem()
+{
+	for(int i=0; i<MAX_MEMORY-1/8; i++)
+	mem[i] = 0;
 }
 
 
@@ -162,6 +171,10 @@ emulator()
 			case OPCODE_OR_IMM_REG:		reg[in.r1] = in.imm | reg[in.r3]; break;
 			case OPCODE_OR_REG_REG:		reg[in.r1] = reg[in.r2] | reg[in.r3]; break;
 
+			case OPCODE_MASK_REG_IMM:	reg[in.r1] = reg[in.r2] & in.imm; break;
+			case OPCODE_MASK_IMM_REG:	reg[in.r1] = in.imm & reg[in.r3]; break;
+			case OPCODE_MASK_REG_REG:	reg[in.r1] = reg[in.r2] & reg[in.r3]; break;
+
 			case OPCODE_CMP_EQ_ADDR:	if(reg[in.r1] == reg[in.r2]) { reg[LR] = reg[PC]; reg[PC] = in.imm / 8; } break;
 			case OPCODE_CMP_NE_ADDR:	if(reg[in.r1] != reg[in.r2]) { reg[LR] = reg[PC]; reg[PC] = in.imm / 8; } break;
 			case OPCODE_CMP_GT_ADDR:	if(reg[in.r1] < reg[in.r2]) { reg[LR] = reg[PC]; reg[PC] = in.imm / 8; } break;
@@ -169,7 +182,7 @@ emulator()
 
 			case OPCODE_JMP_ADDR:		reg[LR] = reg[PC]*0x8; reg[PC] = in.imm/8; break;
 			case OPCODE_JMP_REG:		reg[LR] = reg[PC]*0x8; reg[PC] = reg[in.r1]/8; break;
-			case OPCODE_RET:		reg[PC] = reg[LR]/0x8; break;
+			case OPCODE_RET:			reg[PC] = reg[LR]/0x8; break;
 			case OPCODE_HALT: running = 0; break;
 		}
 		mem[SYS_TIMER_BASE_ADDR / 8] = ++system_timer;
@@ -181,32 +194,27 @@ readfile(s8* f)
 {
 	FILE* file = fopen(f, "r");
 	if(!file) return;
-	size_t index_ = 0;
-	u64 value = 0;
-	s32 count = 0;
 	s32 c;
+	u32 count = 0;
+	u64 addr = 0;
+	s8 buffer[16];
 	while((c = fgetc(file)) != EOF)
 	{
-		if(c == ';')
+		if(c == ':')
 		{
-			if(index_ >= MAX_MEMORY / 8) break;
-			mem[index_] = value;
-			index_++;
-			value = 0;
 			count = 0;
-			c = fgetc(file);
-			if(c != '\n') return;
+			addr = strtoull(buffer, NULL, 16);
+			continue;
 		}
-		else if(c == '\n' || c == ' ' || c == '\t' || c == '\r')
-		continue;
-		else
+		else if(c == ';')
 		{
-			value <<= 4;
-			if(c >= '0' && c <= '9') value |= (c - '0');
-			else if(c >= 'a' && c <= 'f') value |= (c - 'a'+10);
-			else { fprintf(stderr, "Invalid hex char\n"); exit(1); }
-			count++;
+			count = 0;
+			mem[addr] = strtoull(buffer, NULL, 16);
+			addr = 0;
+			continue;
 		}
+		else if(c == ' ' || c == '\n' || c == '\r') continue;
+		buffer[count++] = (char)c;
 	}
 	fclose(file);
 }
@@ -229,22 +237,11 @@ reset_key(struct termios* old_termios)
 	tcsetattr(STDIN_FILENO, TCSANOW, old_termios);
 }
 
-
 void
 writefile(s8* filename)
 {
-	FILE* f = fopen(filename, "w");
-	if(!f) return;
-	for(u32 i=0; i<MAX_MEMORY/8; i++)
-	{
-		{
-			Instruction a = unpack(mem[i]);
-			fprintf(f, "%02x%02x%02x%02x%08x;\n", a.opcode, a.r1, a.r2, a.r3, a.imm);
-		}
-	}
-	fclose(f);
+	
 }
-
 
 Instruction
 unpack(u64 val)
@@ -257,3 +254,4 @@ unpack(u64 val)
 	a.imm = (val >> 0) & 0xffffffff;
 	return a;
 }
+
