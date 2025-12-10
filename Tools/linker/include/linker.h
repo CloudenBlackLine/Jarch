@@ -37,10 +37,10 @@ typedef struct
 extern Symbol	symbol_buffer		[MAX_ASM_LABEL_TABLE*4];
 extern u64		symbol_count;
 
-extern Opcode	hex_buffer			[JARCH_MEMORY_SIZE];
+extern Opcode*	hex_buffer;
 extern u64		hexb_count;
 
-extern File		file				[5];
+extern File*	file;
 extern u32		file_count;
 
 extern Relocate	relocate			[MAX_ASM_LABEL_TABLE/2];
@@ -52,9 +52,14 @@ extern u64		relocate_count;
 
 void			linker				(s32,s8**);
 
-s8*				read_labels			(s8*);
+s8*				read_labels			(s8*, u32);
 s8*				read_raw_hex		(s8*);
-
 void			read_relocation		(s8*);
+
+void			write_text			();
+void			write_data			();
+void			write_const			();
+void			do_labels			();
+void			do_relocate			();
 
 #endif

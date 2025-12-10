@@ -69,7 +69,7 @@ first_pass(s8* p, u64 len)
 			}
 			case SECTION_CONST:
 			{
-				p++;
+				if(*p == '.') p++;
 				p = get_label(line, p, section);
 				if(*p == '=')
 				{
@@ -157,7 +157,6 @@ second_pass(s8* p, u64 len)
 	}
 	return;
 }
-
 s8*
 section_const_line(s8* p)
 {
@@ -168,10 +167,13 @@ section_const_line(s8* p)
 		{
 			p++;
 			const_buffer[const_offset++] = get_hex(&p);
-			if(*p == ']') { p++; break; }
+			if(*p == ']')
+			{
+				p++;
+				break;
+			}
 		}
 		else p++;
-		
 	}
 	return p;
 }
@@ -186,10 +188,13 @@ section_data_line(s8* p)
 		{
 			p++;
 			data_buffer[data_offset++] = get_hex(&p);
-			if(*p == ']') { p++; break; }
+			if(*p == ']')
+			{
+				p++;
+				break;
+			}
 		}
 		else p++;
-		
 	}
 	return p;
 }
@@ -368,7 +373,7 @@ section_text_line(s8* p)
 					s8 line[64];
 					p = get_name(line, p);
 					if(!strcmp(line, "halt")) text_buffer[text_offset++] = packed(OPCODE_HALT, r1, r2, r3, imm);
-					else if(!strcmp(line, "ret")) text_buffer[text_offset++] = packed(OPCODE_HALT, r1, r2, r3, imm);
+					else if(!strcmp(line, "ret")) text_buffer[text_offset++] = packed(OPCODE_RET, r1, r2, r3, imm);
 					else if(!strcmp(line, "push"))
 					switch(*p)
 					{

@@ -7,27 +7,23 @@ writefile(const s8* file)
 {
 	FILE* f = fopen(file, "wb");
 	if(!f) return;
-
-//	for(u32 i=0; i<hexb_count; i++)
-//	fprintf(f, "%016lx:%016lx;\n", hex_buffer[i].addr, hex_buffer[i].value);
-
+	for(u32 i=0; i<hexb_count; i++)
+	fprintf(f, "%016lx:%016lx;\n", hex_buffer[i].addr, hex_buffer[i].value);
 	fclose(f);
 }
 
-
-void
-readfile(const s8* filename, s8* loc)
+s8*
+readfile(const s8* filename)
 {
-
-	// Get contents into *loc;
 	s32 fd = open(filename, O_RDONLY);
 	u64 size;
 	struct stat st;
 	fstat(fd, &st);
 	size = st.st_size;
-	return;
+	s8* loc = malloc(size);
+	read(fd, loc, size);
+	return loc;
 }
-
 
 bool
 start_contains(s8* src, const s8* look)
@@ -39,7 +35,6 @@ start_contains(s8* src, const s8* look)
 	}
 	return true;
 }
-
 
 s8*
 read_line(s8* src, s8* dest)

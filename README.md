@@ -1,26 +1,41 @@
-# Jarch
+# JArch Tools
 
-Jarch is a custom CPU architecture project under Clouden Blackline, including tools, emulators, and projects like kernels and missile systems. This repository is structured to separate development tools from actual projects.
+This folder contains the core development tools for JArch: the assembler, linker, emulator, and test utilities.
 
-> **Note:** All numbers and digits in both source code and compiled binaries are represented in **hexadecimal**.
+## Quick Start
 
-## About
+- **Assemble a file**:  
+  ```bash
+  asm source.s obj.o
+  ```
+  Produces an object file from a single assembly source.
 
-This is my first GitHub repository, and I would greatly appreciate any feedback or critique specifically on the CPU-related files and architecture (Jarch itself). This includes the assembler, emulator, instruction set, or any design decisions in the CPU and Jcode. Constructive criticism is welcome, especially regarding organization, efficiency, or clarity of the CPU files.
+- **Link object files**:  
+  ```bash
+  lnk source1.o -o final.hex
+  ```
+  Combines object files into a hex file. Currently, cross-file labels are not supported, so multi-file projects without cross-references will work.
 
-## Repository Structure
+- **Run programs**:  
+  Use the emulator to execute assembled or linked programs.
 
-- **Tools/src/** – Development tools for the Jarch architecture:
-  - **Assembler** – Transpiles Jcode into executable instructions.
-  - **Emulator** – Runs compiled Jcode programs and provides debugging utilities.
-  - **BinViewer** – Displays only memory addresses in the final binary that contain non-zero values.
+## Output
 
-- **Projects/** – Contains code for specific projects built on Jarch, such as:
-  - **Kernel1** – Experimental OS kernel
-  - **MissileSystem** – Simulated missile control system
+All executables and object files go in the `bin/` folder inside `tools/`:
 
-## Getting Started
+```
+jarch/
+└── tools/
+    ├── asm
+    ├── lnk
+    ├── emu
+    ├── test/
+    └── bin/
+```
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/CloudenBlackLine/Jarch.git
+## Notes
+
+- The assembler works for single files.  
+- The linker can combine multiple files but cannot yet resolve labels across files.  
+
+Future updates will add full multi-file support and expand emulator capabilities.

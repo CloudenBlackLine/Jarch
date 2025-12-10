@@ -13,8 +13,6 @@ typedef short		s16;
 typedef int			s32;
 typedef long		s64;
 
-typedef u8          bool;
-
 #define true        1
 #define false       0
 
