@@ -1,21 +1,42 @@
-# Jarch Tools
+# JArch Tools
 
-This folder contains the development tools for the Jarch CPU architecture.
+This folder contains the core development tools for JArch: the assembler, linker, emulator, and test utilities.
 
-> **Note:** All numbers and digits in both source code and compiled binaries are represented in **hexadecimal**.
+## Quick Start
 
-## Contents
+- **Assemble a file**:  
+  ```bash
+  asm source.s obj.o
+  ```
+  Produces an object file from a single assembly source.
 
-- **Assembler** – Transpiles Jcode programs into executable instructions for the Jarch emulator.  
-- **Emulator** – Runs compiled Jcode programs and provides debugging and inspection capabilities.  
-- **BinViewer** – Displays only the memory addresses in the final binary that contain non-zero values. The 
+- **Link object files**:  
+  ```bash
+  lnk source1.o -o final.hex
+  ```
+  Combines object files into a hex file. Currently, cross-file labels are not supported, so multi-file projects without cross-references will work.
 
-## Usage
+- **Run programs**:  
+  Use the emulator to execute assembled or linked programs.
 
-1. Navigate to the tool you want to use:
-   ```bash
-   cd Tools/src/assembler
-   ```
-2. Follow the instructions in the respective tool folder to build or run.
+## Output
 
-> These tools are designed to work together for Jarch CPU development. Constructive feedback on design, efficiency, or clarity is welcome.
+All executables and object files go in the `bin/` folder inside `tools/`:
+
+```
+jarch/
+└── tools/
+    ├── asm
+    ├── lnk
+    ├── emu
+    ├── test/
+    └── bin/
+```
+
+## Notes
+
+- The assembler works for single files.  
+- The linker can combine multiple files but cannot yet resolve labels across files.  
+
+Future updates will add full multi-file support and expand emulator capabilities.
+ clarity is welcome.
