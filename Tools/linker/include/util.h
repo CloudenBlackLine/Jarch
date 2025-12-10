@@ -1,3 +1,11 @@
+/*
+ * Clouden Blackline Source Code
+ * Author: Judah
+ * Project: JArch
+ */
+
+
+
 #ifndef UTIL_H
 #define UTIL_H
 

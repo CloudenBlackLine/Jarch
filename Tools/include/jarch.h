@@ -1,3 +1,11 @@
+/*
+ * Clouden Blackline Source Code
+ * Author: Judah
+ * Project: JArch
+ */
+
+
+
 #ifndef JARCH_H
 #define JARCH_H
 

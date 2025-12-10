@@ -1,3 +1,11 @@
+/*
+ * Clouden Blackline Source Code
+ * Author: Judah
+ * Project: JArch
+ */
+
+
+
 #include "./include/emulator.h"
 
 u64          mem             [JARCH_MEMORY_SIZE];

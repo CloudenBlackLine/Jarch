@@ -1,3 +1,11 @@
+/*
+ * Clouden Blackline Source Code
+ * Author: Judah
+ * Project: JArch
+ */
+
+
+
 #ifndef EMULATOR_H
 #define EMULATOR_H
 

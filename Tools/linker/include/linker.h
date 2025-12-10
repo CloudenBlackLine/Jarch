@@ -1,3 +1,11 @@
+/*
+ * Clouden Blackline Source Code
+ * Author: Judah
+ * Project: JArch
+ */
+
+
+
 #ifndef LINKER_H
 #define LINKER_H
 

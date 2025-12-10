@@ -1,3 +1,11 @@
+/*
+ * Clouden Blackline Source Code
+ * Author: Judah
+ * Project: JArch
+ */
+
+
+
 #include "./include/linker.h"
 
 Symbol	symbol_buffer	[MAX_ASM_LABEL_TABLE*4];
