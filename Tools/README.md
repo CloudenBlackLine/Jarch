@@ -1,6 +1,6 @@
-# JArch Tools
+# Jarch Tools
 
-This folder contains the core development tools for JArch: the assembler, linker, emulator, and test utilities.
+This folder contains the core development tools for Jarch: the assembler, linker, emulator, and test utilities.
 
 ## Quick Start
 
@@ -21,10 +21,10 @@ This folder contains the core development tools for JArch: the assembler, linker
 
 ## Output
 
-All executables and object files go in the `bin/` folder inside `tools/`:
+All executables and object files go in the `bin/` folder inside `Tools/`:
 
 ```
-jarch/
+Jarch/
 └── tools/
     ├── asm
     ├── lnk
