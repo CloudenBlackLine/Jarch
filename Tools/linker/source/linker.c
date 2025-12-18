@@ -41,7 +41,7 @@ linker(s32 argc, s8* argv[])
 
 		// the rest of the object file
 		loc = read_raw_hex(loc);
-		read_relocation(loc);
+		read_relocation(loc, i);
 
 
 		file_count++;
@@ -82,13 +82,13 @@ read_labels(s8* p, u32 i)
 		buffer = read_splice(buffer, name);
 
 		if(!strcmp(name, "_start")) _f_entry = i;
+		symbol_buffer[symbol_count].file_index = i;
 
 		strcpy(symbol_buffer[symbol_count].name, name);
 		symbol_buffer[symbol_count].section = (Section)(*buffer++ - '0'), buffer++;
+		if(symbol_buffer[symbol_count].section == SECTION_BSS) file[i].b_count++;
 		buffer = read_splice(buffer, name);
-		symbol_buffer[symbol_count].base_addr = read_hex(&name);
-		buffer = read_splice(buffer, name);
-		symbol_buffer[symbol_count++].offset = read_hex(&name);
+		symbol_buffer[symbol_count++].base_addr = read_hex(&name);
 	}
 	return p;
 }
@@ -124,10 +124,10 @@ read_raw_hex(s8* p)
 }
 
 void
-read_relocation(s8* p)
+read_relocation(s8* p, u32 i)
 {
 	if(start_contains(p, "(relocate)")) p+=11;
-	while(*p!='\0')
+	while(*p!='\0' && *p!='^')
 	{
 		s8* buffer = malloc(256);
 		p = read_line(p, buffer);
@@ -139,7 +139,10 @@ read_relocation(s8* p)
 		buffer = read_splice(buffer, name);
 		relocate[relocate_count].section = (Section)(*buffer++ - '0'), buffer++;
 		buffer = read_splice(buffer, name);
-		relocate[relocate_count++].offset = read_hex(&name);
+		relocate[relocate_count].call_offset = read_hex(&name);
+		buffer = read_splice(buffer, name);
+		relocate[relocate_count].file_index = i;
+		relocate[relocate_count++].loc_offset = read_hex(&name);
 	}
 	return;
 }
@@ -209,12 +212,65 @@ write_const()
 void
 do_labels()
 {
+	u64 section_size = 0;
+	u64 index = 0;
+	u64 fc = 1;
+
+	do
+	{
+		if(file[fc].index != symbol_buffer[index].file_index) fc++;
+		if(symbol_buffer[index].section == SECTION_TEXT)
+		{
+			section_size = 0;
+			for(u64 i=1; i<fc; i++)
+			section_size+=(0x8*file[i].t_count);
+			symbol_buffer[index].base_addr += section_size;
+		}
+		else if(symbol_buffer[index].section == SECTION_DATA)
+		{
+			section_size = 0;
+			for(u64 i=0; i<fc; i++)
+			section_size+=(0x8*file[i].d_count);
+			symbol_buffer[index].base_addr += section_size;
+		}
+		else if(symbol_buffer[index].section == SECTION_CONST)
+		{
+			section_size = 0;
+			for(u64 i=0; i<fc; i++)
+			section_size+=(0x8*file[i].c_count);
+			symbol_buffer[index].base_addr += section_size;
+		}
+		else if(symbol_buffer[index].section == SECTION_BSS)
+		{
+			section_size = 0;
+			for(u64 i=0; i<fc; i++)
+			section_size+=(0x8*file[i].b_count);
+			symbol_buffer[index].base_addr += section_size;
+		}
+	}
+	while(index++<symbol_count);
 	return;
 }
 
 void
 do_relocate()
 {
+	u64 s_index = 0;
+	for(u64 i=0; i<relocate_count; i++)
+	{
+		s_index = get_symbol_index(relocate[i].name);
+		if(s_index == UN_DEFINED_LABEL)
+		printf("ERROR: linker: label - '%s' not found.\n", relocate[i].name), exit(0);
+		u64 addr = symbol_buffer[s_index].base_addr+(0x8*relocate[i].loc_offset);
+		u64 loc = relocate[i].call_offset;
+		for(u32 s=0; s<file[relocate[i].file_index].index; s++)
+		loc += file[s].t_count;
+		Instruction t = unpack(hex_buffer[loc].value);
+		if(t.imm != UN_DEFINED_LABEL)
+		printf("ERROR: linker: label - '%s' already relocated.\n", relocate[i].name), exit(0);
+		t.imm = addr;
+		hex_buffer[loc].value = packed(t.opcode, t.r1, t.r2, t.r3, t.imm);
+	}
 
 	return;
 }

@@ -25,4 +25,6 @@ extern u64          LR;
 
 void        emulator(s32,s8**);
 
+bool        check_const(u64);
+
 #endif

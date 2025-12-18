@@ -20,6 +20,7 @@ emulator(s32 argc, s8* argv[])
 	readfile(argv[1]);
 	run_emu();
 	reset_key(&old_termios);
+	writefile(argv[1]);
 	return;
 }
 
@@ -53,6 +54,7 @@ run_emu()
 			}
 			case OPCODE_REG_VAL_IMM:
 			{
+				if(check_const(reg[in.r1]))
 				mem[reg[in.r1]/8] = in.imm;
 				break;
 			}
@@ -151,3 +153,9 @@ run_emu()
 	}
 }
 
+bool
+check_const(u64 addr)
+{
+	return (addr > (RAM_CONST_BASE+RAM_CONST_SIZE)
+			|| addr < RAM_CONST_BASE);
+}

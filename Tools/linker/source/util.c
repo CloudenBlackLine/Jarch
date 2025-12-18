@@ -56,7 +56,9 @@ read_line(s8* src, s8* dest)
 }
 
 
-s8* read_splice(s8* src, s8* dest) {
+s8*
+read_splice(s8* src, s8* dest)
+{
 	while(*src && *src != ',' && *src != '\n')
 	*dest++ = *src++;
 	if(*src == ',' || *src == '\n') *src++;
@@ -79,3 +81,40 @@ read_hex(s8** p)
 	}
 	return value;
 }
+
+
+u64
+get_symbol_index(s8* name)
+{
+	for(u64 i=0; i<symbol_count; i++)
+	if(!strcmp(symbol_buffer[i].name, name))
+	return i;
+	return UN_DEFINED_LABEL;
+}
+
+
+Instruction
+unpack(u64 val)
+{
+	Instruction a;
+	a.opcode = (val >> 56) & 0xff;
+	a.r1 = (val >> 48) & 0xff;
+	a.r2 = (val >> 40) & 0xff;
+	a.r3 = (val >> 32) & 0xff;
+	a.imm = (val >> 0) & 0xffffffff;
+	return a;
+}
+
+
+u64
+packed(u8 opcode, u8 s1, u8 s2, u8 s3, u32 imm)
+{
+	u64 val = 0x0000000000000000;
+	val |= ((u64)opcode << 56);
+	val |= ((u64)s1 << 48);
+	val |= ((u64)s2 << 40);
+	val |= ((u64)s3 << 32);
+	val |= ((u64)imm << 0);
+	return val;
+}
+

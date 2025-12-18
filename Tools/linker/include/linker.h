@@ -25,9 +25,10 @@ typedef struct
 	u64	text_			[ROM_TEXT_SIZE];
 	u64	t_count;
 	u64	const_			[RAM_CONST_SIZE];
-	u64 	c_count;
+	u64 c_count;
 	u64	data_			[RAM_DATA_SIZE];
-	u64 	d_count;
+	u64 d_count;
+	u64 b_count;
 	u32	index;
 	s8	name[64];
 } File;
@@ -62,7 +63,9 @@ void			linker				(s32,s8**);
 
 s8*				read_labels			(s8*, u32);
 s8*				read_raw_hex		(s8*);
-void			read_relocation		(s8*);
+void			read_relocation		(s8*, u32);
+
+
 
 void			write_text			();
 void			write_data			();

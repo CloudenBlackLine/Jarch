@@ -30,7 +30,6 @@ readbuffer(s8* loc, u32 size, s8* buffer)
 	loc[i++] = *buffer++;
 }
 
-
 void
 writefile(s8* filename)
 {
@@ -40,8 +39,8 @@ writefile(s8* filename)
 	fprintf(f, "(label)\n");
 	for(u32 i=0; i<symbol_count; i++)
 	{
-		fprintf(f, "<%s,%01x,%016lx,%08lx,%u,%u>\n", 
-		labels[i].name, (u32)labels[i].section, labels[i].base_addr, labels[i].offset, labels[i].global, (bool)labels[i].global_state);
+		fprintf(f, "<%s,%01x,%016lx,%u,%u>\n",
+		labels[i].name, (u32)labels[i].section, labels[i].base_addr, labels[i].global, (bool)labels[i].global_state);
 	}
 	fprintf(f, "(text)\n");
 	for(u64 i=0; i<text_offset; i++)
@@ -58,7 +57,9 @@ writefile(s8* filename)
 
 	fprintf(f, "(relocate)\n");
 	for(u64 i=0; i<relocate_offset; i++)
-	fprintf(f, "<%s,%01x,%08lx>\n", relocate_buffer[i].name, relocate_buffer[i].section, relocate_buffer[i].offset);
+	fprintf(f, "<%s,%01x,%08lx,%08lx>\n", relocate_buffer[i].name, relocate_buffer[i].section, relocate_buffer[i].call_offset, relocate_buffer[i].loc_offset);
+
+	fprintf(f, "^");
 
 	fclose(f);
 }
@@ -154,23 +155,7 @@ get_label(s8* dest, s8* src, Section sec)
 s8*
 get_line(s8* dest, s8* src)
 {
-	while (*src && *src != ';') *dest++ = *src++;
-	*dest = 0;
-	return src;
-}
-
-u64
-find_label(s8* name)
-{
-	for(u64 i=0; i<symbol_count; i++)
-	if(!strcmp(labels[i].name, name)) return labels[i].base_addr;
-	return UN_DEFINED_LABEL;
-}
-
-u64
-find_addr_value(u64 addr, u64* loc, u64 base)
-{
-	return loc[addr-base];
+	while (*src && *src != ';') *dest++ = *src++;*dest = 0;return src;
 }
 
 bool
@@ -184,18 +169,6 @@ start_contains(s8* src, const s8* look)
 	return true;
 }
 
-u64
-packed(u8 opcode, u8 s1, u8 s2, u8 s3, u32 imm)
-{
-	u64 val = 0x0000000000000000;
-	val |= ((u64)opcode << 56);
-	val |= ((u64)s1 << 48);
-	val |= ((u64)s2 << 40);
-	val |= ((u64)s3 << 32);
-	val |= ((u64)imm << 0);
-	return val;
-}
-
 Instruction
 unpack(u64 val)
 {
@@ -206,6 +179,18 @@ unpack(u64 val)
 	a.r3 = (val >> 32) & 0xff;
 	a.imm = (val >> 0) & 0xffffffff;
 	return a;
+}
+
+u64
+packed(u8 opcode, u8 s1, u8 s2, u8 s3, u32 imm)
+{
+	u64 val = 0x0000000000000000;
+	val |= ((u64)opcode << 56);
+	val |= ((u64)s1 << 48);
+	val |= ((u64)s2 << 40);
+	val |= ((u64)s3 << 32);
+	val |= ((u64)imm << 0);
+	return val;
 }
 
 OPCODES_
@@ -232,4 +217,31 @@ math2_op_ret(s8 t, s8 flag1, s8 flag2)
 		else if(flag1 == 'i') return OPCODE_DIV_IMM_REG;
 		return OPCODE_DIV_REG_REG;
 	}
+}
+
+u64
+calculate_offset(s8** ptr)
+{
+	s8* p = *ptr;
+	u64 offset = 0;
+	if(*p == '[')
+	{
+		p++;
+		if(*p == '#') p++;
+		offset = get_hex(&p);
+		if(*p == ']') p++;
+		*ptr = p;
+		return offset;
+	}
+	else return 0;
+}
+
+void
+add_relocate(s8* name, Section sec, u64 lo, u64 co)
+{
+	strcpy(relocate_buffer[relocate_offset].name, name);
+	relocate_buffer[relocate_offset].section = sec;
+	relocate_buffer[relocate_offset].loc_offset = lo*8;
+	relocate_buffer[relocate_offset++].call_offset = co;
+	name[0] = '\0';
 }

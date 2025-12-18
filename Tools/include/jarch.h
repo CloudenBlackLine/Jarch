@@ -75,11 +75,10 @@ typedef struct
 {
     s8              name[64];
     Section         section;
-    u64             base_addr;
-    u64             offset;
+    u64             base_addr;;
     bool            global;
     Global_State    global_state;
-    s8		    filename[64];
+    u64				file_index;
 } Symbol;
 
 
@@ -87,7 +86,9 @@ typedef struct
 {
 	s8	name[64];
 	Section	section;
-	u64	offset;
+	u64	call_offset;
+	u64 loc_offset;
+	u64 file_index;
 } Relocate;
 
 
@@ -206,21 +207,6 @@ typedef enum
 	OPCODE_HALT,
 	OPCODE_RET,
 } OPCODES_;
-
-
-
-typedef struct __attribute__((packed))
-{
-	u64		entry_point;
-	s8		entry_label[32];
-	s32		entry_flag;
-	u64		max_labels;
-	u64		max_memory;
-	u64		data_base_addr_rom;
-	u64		data_base_addr_ram;
-	u64		text_base_addr_rom;
-	u64		text_base_addr_ram;
-} SystemConfig;
 
 
 

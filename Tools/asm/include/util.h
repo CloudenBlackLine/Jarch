@@ -15,28 +15,26 @@
 
 
 
-s32 	    readfile                (s8* filename, s8* loc, u32 size);
-void        readbuffer              (s8* loc, u32 size, s8* buffer);
-void	    writefile               (s8* filename);
+s32 	    readfile                (s8*,s8*,u32);
+void        readbuffer              (s8*,u32,s8*);
+void	    writefile               (s8*);
 
-void	    skip_ws                 (s8* dest, s8* src);
+void	    skip_ws                 (s8*,s8*);
 
-u64		    get_hex                 (s8** p);
-u8		    get_reg                 (s8** p);
-s8*		    get_name                (s8* dest, s8* src);
+u64		    get_hex                 (s8**);
+u8		    get_reg                 (s8**);
+s8*		    get_name                (s8*,s8*);
+s8*         get_label               (s8*,s8*,Section);
+s8*         get_line                (s8*,s8*);
 
-s8*         get_label               (s8* dest, s8* src, Section s);
-s8*         get_line                (s8* dest, s8* src);
+bool        start_contains          (s8*,const s8*);
 
-u64         find_label              (s8* name);
-u64         find_addr_value         (u64 addr, u64* loc, u64 base);
+u64		    packed                  (u8,u8,u8,u8,u32);
 
-bool        start_contains          (s8* s1, const s8* s2);
+OPCODES_    math1_op_ret            (s8,s8);
+OPCODES_    math2_op_ret            (s8,s8,s8);
+u64         calculate_offset        (s8**);
 
-u64		    packed                  (u8 r1, u8 r2, u8 r3, u8 r4, u32 imm);
-Instruction	unpack                  (u64 value);
+void        add_relocate            (s8*,Section,u64,u64);
 
 #endif
-
-OPCODES_    math1_op_ret             (s8 t, s8 flag);
-OPCODES_    math2_op_ret             (s8 t, s8 flag1, s8 flag2);

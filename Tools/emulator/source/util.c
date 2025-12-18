@@ -57,8 +57,14 @@ reset_key(struct termios* old_termios)
 }
 
 void
-writefile(s8* filename)
+writefile(s8* f)
 {
+    FILE* file = fopen(f, "wb");
+    if(!file) return;
+
+    for(u64 i=0; i<JARCH_MEMORY_SIZE; i++)
+    if(mem[i] != 0x0)
+    fprintf(file, "%016lx:%016lx;\n", i*0x8, mem[i]);
     return;
 }
 

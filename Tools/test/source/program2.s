@@ -4,75 +4,15 @@
  * Project: JArch
 >
 
+   ~data
 
-
-    ~data
-.tp = #3000;
-.sp = #4000;
-.lp = #5000;
+.program2_1 = #9;
+.program2_2 = #10;
 
     ~text
-init:
-{
-    $sp = .sp;
-    !_start;
-}
 
-add_task:
-{
-    .sp = $sp;
-    $sp = .lp;
-    !push $lr;
-    .lp = $sp;
-    $sp = .tp;
-
-    !push $1;
-    
-    .tp = $sp;
-    $sp = .lp;
-    !pop $lr;
-    .lp = $sp;
-    $sp = .sp;
-    !ret;
-}
-
-
-remove_task:
-{
-    .sp = $sp;
-    $sp = .lp;
-    !push $lr;
-    .lp = $sp;
-    $sp = .tp;
-
-    !pop $1;
-    
-    .tp = $sp;
-    $sp = .lp;
-    !pop $lr;
-    .lp = $sp;
-    $sp = .sp;
-    !ret;
-}
-
-
-
-
-input:
-{
-    
-    .sp = $sp;
-    $sp = .lp;
-    !push $lr;
-    .lp = $sp;
-    $sp = .sp;
-
-    !program;
-
-    .sp = $sp;
-    $sp = .lp;
-    !push $lr;
-    .lp = $sp;
-    $sp = .sp;
-    !ret;
-}
+output:
+    .sp = $8;
+    !push .sp;
+    !push .program2_2;
+    !halt;
