@@ -13,7 +13,7 @@
 #include "../../include/types.h"
 #include "./emulator.h"
 
-#include "../../asm/include/assembler.h"
+#include "../../assembler/include/assembler.h"
 
 void		readfile      (s8*);
 void		writefile     (s8*);

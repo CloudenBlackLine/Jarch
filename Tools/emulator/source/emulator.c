@@ -60,41 +60,49 @@ run_emu()
 			}
 			case OPCODE_REG_VAL_REG:
 			{
+				if(check_const(reg[in.r1]))
 				mem[reg[in.r1]/8] = reg[in.r2];
 				break;
 			}
 			case OPCODE_REG_VAL_REG_VAL:
 			{
+				if(check_const(reg[in.r1]))
 				mem[reg[in.r1]/8] = mem[reg[in.r2]/8];
 				break;
 			}
 			case OPCODE_REG_VAL_ADDR_VAL:
 			{
+				if(check_const(reg[in.r1]))
 				mem[reg[in.r1]/8] = mem[in.imm/8];
 				break;
 			}
 			case OPCODE_REG_VAL_LABEL_ADDR_VAL:
 			{
+				if(check_const(reg[in.r1]))
 				mem[reg[in.r1]/8] = mem[mem[in.imm/8]/8];
 				break;
 			}
 			case OPCODE_LABEL_ADDR_VAL_REG:
 			{
+				if(check_const(mem[in.imm/8]))
 				mem[mem[in.imm/8]/8] = reg[in.r1];
 				break;
 			}
 			case OPCODE_LABEL_ADDR_VAL_REG_VAL:
 			{
+				if(check_const(mem[in.imm/8]))
 				mem[mem[in.imm/8]/8] = mem[reg[in.r1]/8];
 				break;
 			}
 			case OPCODE_ADDR_VAL_REG:
 			{
+				if(check_const(in.imm))
 				mem[in.imm/8] = reg[in.r1];
 				break;
 			}
 			case OPCODE_ADDR_VAL_REG_VAL:
 			{
+				if(check_const(in.imm))
 				mem[in.imm/8] = mem[reg[in.r2]/8];
 				break;
 			}

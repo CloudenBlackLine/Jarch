@@ -12,7 +12,7 @@
 
 #include "../../include/types.h"
 #include "../../include/jarch.h"
-#include "../../asm/include/assembler.h"
+#include "../../assembler/include/assembler.h"
 
 
 void		writefile	    (const s8*);
